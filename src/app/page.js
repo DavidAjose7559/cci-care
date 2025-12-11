@@ -42,12 +42,21 @@ export default function Home() {
           <div className="font-semibold text-lg">
             CCI Care Network
           </div>
-          <nav className="flex gap-4 text-sm">
-            <a href="#" className="font-medium">Feed</a>
-            <a href="#" className="text-slate-600">My Requests</a>
-            <a href="#" className="text-slate-600">Profile</a>
-            <a href="#" className="text-slate-600">Admin</a>
-          </nav>
+	<nav className="flex gap-4 text-sm">
+  		<Link href="/" className="font-medium">
+    			Feed
+  		</Link>
+  		<a href="#" className="text-slate-600">
+    			My Requests
+  		</a>
+  		<Link href="/profile" className="text-slate-600 hover:underline">
+    			Profile
+  		</Link>
+  		<a href="#" className="text-slate-600">
+    			Admin
+  		</a>
+	</nav>
+
         </div>
       </header>
 
