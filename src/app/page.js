@@ -1,4 +1,6 @@
 import Image from "next/image";
+import Link from "next/link";
+
 
 export default function Home() {
   // Fake data for now
@@ -57,9 +59,13 @@ export default function Home() {
             <h1 className="text-2xl font-semibold">
               Help Requests
             </h1>
-            <button className="rounded-md px-4 py-2 text-sm font-medium bg-red-500 text-white hover:bg-red-600">
-              🆘 Post an SOS
-            </button>
+            <Link
+		href="/post-sos"
+		className="rounded-md px-4 py-2 text-sm font-medium bg-red-500 text-white hover:bg-red-600"
+		>
+  			🆘 Post an SOS
+	</Link>
+
           </div>
 
           <div className="space-y-4">
