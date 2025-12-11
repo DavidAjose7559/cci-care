@@ -68,9 +68,9 @@ export default function Home() {
             <Link href="/" className="font-medium">
               Feed
             </Link>
-            <a href="#" className="text-slate-600">
+            <Link href="/my-requests" className="text-slate-600 hover:underline">
               My Requests
-            </a>
+             </Link>
             <Link href="/profile" className="text-slate-600 hover:underline">
               Profile
             </Link>

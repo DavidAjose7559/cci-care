@@ -36,6 +36,7 @@ export default function PostSOSPage() {
       description,
       badges: [], // no credibility badges yet in this demo
       urgent: urgency === "Urgent",
+	createdByMe: true, // mark this as created by the current user (this browser)
     };
 
     // Save to localStorage list
