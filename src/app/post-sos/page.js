@@ -12,20 +12,54 @@ export default function PostSOSPage() {
 
     const formData = new FormData(e.target);
 
-    const payload = {
-      type: formData.get("type"),
-      title: formData.get("title"),
-      description: formData.get("description"),
-      urgency: formData.get("urgency"),
-      visibility: formData.get("visibility"),
+    const type = formData.get("type");
+    const title = formData.get("title");
+    const description = formData.get("description");
+    const urgency = formData.get("urgency");
+    const visibility = formData.get("visibility");
+    const nameFromForm = formData.get("name");
+
+    // Decide what name to show in the feed
+    let displayName = "CCI member";
+    if (visibility === "Anonymous") {
+      displayName = "Anonymous";
+    } else if (nameFromForm && nameFromForm.trim().length > 0) {
+      displayName = nameFromForm.trim();
+    }
+
+    // Create a new help request object in the same shape as the feed uses
+    const newRequest = {
+      id: Date.now(), // simple unique id for demo
+      title,
+      type,
+      name: displayName,
+      description,
+      badges: [], // no credibility badges yet in this demo
+      urgent: urgency === "Urgent",
     };
 
-    console.log("New SOS request (demo only):", payload);
+    // Save to localStorage list
+    if (typeof window !== "undefined") {
+      try {
+        const existing = window.localStorage.getItem("cci-help-requests");
+        let list = [];
+        if (existing) {
+          const parsed = JSON.parse(existing);
+          if (Array.isArray(parsed)) {
+            list = parsed;
+          }
+        }
+        // put newest at the top
+        list.unshift(newRequest);
+        window.localStorage.setItem("cci-help-requests", JSON.stringify(list));
+      } catch (err) {
+        console.error("Error saving SOS to localStorage:", err);
+      }
+    }
 
-    // For now, just show a message and go back to the feed.
     setTimeout(() => {
       alert(
-        "Your SOS has been submitted (demo). In the real app, this will notify helpers and admins."
+        "Your SOS has been submitted (demo). In the full app, this will notify helpers and admins."
       );
       setIsSubmitting(false);
       window.location.href = "/";
@@ -115,6 +149,22 @@ export default function PostSOSPage() {
             />
           </div>
 
+          {/* Optional name */}
+          <div>
+            <label className="block text-sm font-medium text-slate-700 mb-1">
+              Your name (optional for this demo)
+            </label>
+            <input
+              name="name"
+              type="text"
+              placeholder="e.g. Jane Doe"
+              className="w-full rounded-md border px-2 py-1.5 text-sm"
+            />
+            <p className="mt-1 text-xs text-slate-500">
+              If you leave this empty and choose Anonymous below, your request will show as “Anonymous” on the feed.
+            </p>
+          </div>
+
           {/* Urgency */}
           <div>
             <span className="block text-sm font-medium text-slate-700 mb-1">
@@ -153,7 +203,7 @@ export default function PostSOSPage() {
                   name="visibility"
                   value="Anonymous"
                 />
-                <span>Show as “Anonymous” on the feed (pastors/admins can still see who I am)</span>
+                <span>Show as “Anonymous” on the feed (pastors/admins can still see who I am in the full app)</span>
               </label>
             </div>
           </div>
