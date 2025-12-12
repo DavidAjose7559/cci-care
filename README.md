@@ -1,163 +1,162 @@
-CCI Care Network (Prototype)
+# 📘 CCI Care Network (Prototype)
 
-CCI Care Network is an internal web application designed to help members of CCI Toronto connect needs with helpers in a safe, accountable, and Spirit-led way.
+**CCI Care Network** is an internal web application designed to help members of **CCI Toronto** connect needs with helpers in a **safe, accountable, and Spirit-led** way.
 
-Many people in church quietly struggle with job needs, financial challenges, spiritual dryness, or lack of mentorship — while others have the ability and willingness to help but never cross paths with them.
+Many people quietly struggle with:
+- Job needs  
+- Financial challenges  
+- Spiritual dryness  
+- Lack of mentorship  
+
+…while others in the same church have the ability and willingness to help — but never cross paths.
+
 This tool bridges that gap.
 
-🌟 Vision
+---
 
-To build a platform where the Body can strengthen the Body:
+## 🌟 Vision
 
-Members who need help can raise an SOS.
+To build a platform where the **Body strengthens the Body**:
 
-Members who can help can respond.
-
-Pastors and admins maintain oversight, verification, and accountability.
-
-Nobody suffers in silence, and everyone has a safe way to seek support.
+- Members who need help can **raise an SOS**  
+- Members who can help can **respond**  
+- Pastors and admins maintain **oversight, verification, and accountability**  
+- No one suffers in silence  
+- Everyone has a safe pathway to seek support  
 
 This app supports:
+- Job referrals  
+- Financial assistance  
+- Spiritual mentorship  
+- Bible study / community connections  
+- Any type of help within the church family  
 
-Job referrals
+---
 
-Financial assistance
+## ✨ Features (Prototype)
 
-Spiritual mentorship
-
-Bible study/community connections
-
-Any type of help within the church family
-
-✨ Features (Prototype)
-🆘 1. Post an SOS (Help Request)
+### 🆘 1. Post an SOS (Help Request)
 
 Members can submit needs through a simple form:
 
-Type of need (Job, Financial, Spiritual, Community, Other)
+- Type of need (Job, Financial, Spiritual, Community, Other)  
+- Title & description  
+- Urgency  
+- Visibility (Name or Anonymous)  
 
-Title & description
+Submitted requests immediately appear on the **Help Feed**.
 
-Urgency
+---
 
-Visibility (Name or Anonymous)
-
-Submitted requests immediately appear on the Help Feed.
-
-📡 2. Live Help Feed
+### 📡 2. Live Help Feed
 
 A real-time feed shows:
 
-Seed example requests
-
-SOS requests created from this device
-
-Urgent highlights
-
-Credibility badges (demo)
-
-“Offer to Help” button (UI only for now)
+- Example (seed) requests  
+- SOS requests created from this device  
+- Urgent highlights  
+- Credibility badges (demo)  
+- “Offer to Help” button (UI only for now)  
 
 This lets helpers quickly see where they are needed.
 
-👤 3. Member Profile (Credibility)
+---
+
+### 👤 3. Member Profile (Credibility)
 
 Members fill out a profile with:
 
-Full name
+- Full name  
+- Membership training status  
+- Celeforce / worker training status  
+- Attendance frequency  
+- How long they’ve been in CCI  
+- First time at CCI Toronto  
 
-Membership training status
+In the full version, pastors will use this to **verify profiles** before allowing access to sensitive areas (financial help, mentorship, etc.).
 
-Celeforce / worker training status
+---
 
-Attendance frequency
+### 📁 4. My Requests
 
-How long they’ve been in CCI
+A page where members can view:
 
-First time at CCI Toronto
+- All SOS requests they posted  
+- The status of each request (demo only: “Open”)  
 
-In the full version, pastors will use this information to verify profiles before granting access to sensitive areas (financial help, mentorship, etc.).
+In the full version, this will show:
+- Responses
+- Helpers assigned
+- Follow-up notes
 
-📁 4. My Requests
+---
 
-A dedicated page where members can view:
-
-All SOS requests they posted
-
-Status of each request (demo only: “Open”)
-
-In the full version, this will also show responses and follow-up.
-
-🛡️ 5. Admin Dashboard (Demo)
+### 🛡️ 5. Admin Dashboard (Demo)
 
 A preview of how pastors/admins can oversee the platform:
 
-View member profile details
+- View member profile details  
+- View all SOS requests  
+- See urgency, type, and visibility (Name/Anonymous)  
+- Future: approve profiles, mark verified, track mentorships  
 
-View all SOS requests
+This ensures **safe, transparent, accountable** interactions.
 
-See urgency, type, and (anonymous/name) visibility
+---
 
-Planned features for oversight and verification
+## 🏗️ Current Tech Stack
 
-This ensures safe, transparent, accountable interactions within the church.
+- **Next.js** (App Router)  
+- **React**  
+- **Tailwind CSS**  
+- **LocalStorage** (temporary data persistence for this prototype)  
 
-🏗️ Current Tech Stack
+No authentication or database yet — this will be added in the full version.
 
-Next.js (App Router)
+---
 
-React
+## 🚀 Planned Features (Full Version)
 
-Tailwind CSS
+- Secure user authentication (email or church login)  
+- Admin approval for joining the network  
+- Verified credibility badges  
+- Mentor–mentee tracking with accountability  
+- Financial help workflows with safety rules  
+- Job referral matching system  
+- Push/email notifications  
+- Real database (PostgreSQL + Prisma)  
 
-LocalStorage (temporary data persistence for prototype)
+---
 
-No authentication or database yet — coming in full version
+## 📌 Notes
 
-🚀 Planned Features (Full Version)
+This is **not a production app**.  
+It is a **vision prototype** designed to demonstrate:
 
-Secure user authentication (email or church account)
+- Core concepts  
+- User flow  
+- Interface design  
+- Admin oversight structure  
 
-Admin approval for joining the network
+All data is stored locally in the browser.  
+**Do not enter sensitive personal information.**
 
-Verified credibility badges
+---
 
-Mentor–mentee tracking with accountability
-
-Financial help flows with warnings & safety rules
-
-Job referral matching system
-
-Push notifications or email notifications
-
-Real database (PostgreSQL + Prisma)
-
-📌 Notes
-
-This is not a production app.
-It is a vision prototype built to demonstrate:
-
-Core concepts
-
-User flow
-
-UI structure
-
-Admin oversight design
-
-All data is stored locally in the browser.
-No sensitive information should be entered.
-
-🙏 Purpose
+## 🙏 Purpose
 
 This project exists to help CCI Toronto live out Scripture:
 
-“And the whole body, joined and held together by every joint with which it is equipped…
-makes the body grow so that it builds itself up in love.”
-— Ephesians 4:16
+> *“And the whole body, joined and held together by every joint with which it is equipped…  
+> makes the body grow so that it builds itself up in love.”*  
+> — **Ephesians 4:16**
 
-When every member supplies — spiritually, practically, financially, emotionally — revival becomes sustainable and every person is strengthened.
+When every member supplies — spiritually, practically, financially, emotionally —  
+revival becomes sustainable and every person is strengthened.
 
-👤 Author
+---
 
-Created by David Ajose as a tool for community building within CCI Toronto.
+## 👤 Author
+
+Created by **David Ajose**  
+as a tool for community building within **CCI Toronto**.
