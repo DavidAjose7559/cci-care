@@ -74,9 +74,9 @@ export default function Home() {
             <Link href="/profile" className="text-slate-600 hover:underline">
               Profile
             </Link>
-            <a href="#" className="text-slate-600">
-              Admin
-            </a>
+            <Link href="/admin" className="text-slate-600 hover:underline">
+    Admin
+  </Link>
           </nav>
         </div>
       </header>
