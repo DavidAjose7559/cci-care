@@ -10,6 +10,11 @@ const PUBLIC_PATHS = [
 export async function middleware(req) {
   const { pathname } = req.nextUrl;
 
+  // ✅ Allow API routes (auth is handled inside each API route)
+  if (pathname.startsWith("/api")) {
+    return NextResponse.next();
+  }
+
   // Allow public routes
   if (PUBLIC_PATHS.some((p) => pathname.startsWith(p))) {
     return NextResponse.next();
@@ -29,12 +34,16 @@ export async function middleware(req) {
     return NextResponse.next();
   }
 
-  // Logged in but not approved -> go to pending
+    // Allow pending users to access ONLY: /pending and /profile
   if (token.status !== "APPROVED" && token.role !== "ADMIN") {
+    if (pathname.startsWith("/profile") || pathname.startsWith("/pending")) {
+      return NextResponse.next();
+    }
     const url = req.nextUrl.clone();
     url.pathname = "/pending";
     return NextResponse.redirect(url);
   }
+
 
   return NextResponse.next();
 }
