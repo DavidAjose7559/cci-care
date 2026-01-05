@@ -1,7 +1,8 @@
+import Link from "next/link";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
-import PendingUsersTable from "./pending-users-table";
+import AdminDashboardClient from "./admin-dashboard-client";
 
 export default async function AdminPage() {
   const session = await getServerSession(authOptions);
@@ -14,6 +15,11 @@ export default async function AdminPage() {
           <p className="mt-2 text-sm text-slate-600">
             You must be an admin to access this page.
           </p>
+          <div className="mt-4">
+            <Link href="/" className="text-sm text-emerald-700 hover:underline">
+              Go to feed
+            </Link>
+          </div>
         </div>
       </div>
     );
@@ -25,16 +31,62 @@ export default async function AdminPage() {
     orderBy: { createdAt: "desc" },
   });
 
+  const openRequests = await prisma.helpRequest.findMany({
+    where: { status: "OPEN" },
+    orderBy: { createdAt: "desc" },
+    include: { createdBy: { select: { email: true, profile: { select: { fullName: true } } } } },
+  });
+
+  const archivedRequests = await prisma.helpRequest.findMany({
+    where: { status: "ARCHIVED" },
+    orderBy: { updatedAt: "desc" },
+    include: { createdBy: { select: { email: true, profile: { select: { fullName: true } } } } },
+    take: 25,
+  });
+
+  const pendingOffers = await prisma.helpOffer.findMany({
+    where: { status: "PENDING" },
+    orderBy: { createdAt: "desc" },
+    include: {
+      request: { select: { id: true, title: true, category: true, createdById: true } },
+      offeredBy: { select: { email: true, profile: { select: { fullName: true } } } },
+    },
+  });
+
   return (
-    <div className="min-h-screen bg-slate-50 px-4 py-8">
-      <div className="mx-auto max-w-5xl space-y-4">
-        <h1 className="text-2xl font-semibold">Admin Approval</h1>
+    <div className="min-h-screen bg-slate-50">
+      <header className="w-full border-b bg-white">
+        <div className="mx-auto max-w-5xl flex items-center justify-between px-4 py-3">
+          <div className="font-semibold text-lg">CCI Care Network — Admin</div>
+          <nav className="flex gap-4 text-sm">
+            <Link href="/" className="text-slate-600 hover:underline">
+              Feed
+            </Link>
+            <Link href="/my-requests" className="text-slate-600 hover:underline">
+              My Requests
+            </Link>
+            <Link href="/profile" className="text-slate-600 hover:underline">
+              Profile
+            </Link>
+            <span className="font-medium">Admin</span>
+          </nav>
+        </div>
+      </header>
+
+      <main className="mx-auto max-w-5xl px-4 py-6 space-y-6">
+        <h1 className="text-2xl font-semibold">Admin Dashboard</h1>
         <p className="text-sm text-slate-600">
-          Approve members into the network. You can also verify (or remove) credibility badges.
+          Approve members into the network, verify badges, review offers to help, and archive/reopen SOS requests.
+          No payments are handled in this app — it only connects people with oversight.
         </p>
 
-        <PendingUsersTable pendingUsers={pendingUsers} />
-      </div>
+        <AdminDashboardClient
+          pendingUsers={pendingUsers}
+          pendingOffers={pendingOffers}
+          openRequests={openRequests}
+          archivedRequests={archivedRequests}
+        />
+      </main>
     </div>
   );
 }

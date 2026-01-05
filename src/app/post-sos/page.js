@@ -6,65 +6,59 @@ import { useState } from "react";
 export default function PostSOSPage() {
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  function handleSubmit(e) {
+  async function handleSubmit(e) {
     e.preventDefault();
     setIsSubmitting(true);
 
     const formData = new FormData(e.target);
 
-    const type = formData.get("type");
+    // Existing form fields
+    const type = formData.get("type"); // Spiritual / Job / Financial / Community / Other
     const title = formData.get("title");
     const description = formData.get("description");
-    const urgency = formData.get("urgency");
-    const visibility = formData.get("visibility");
-    const nameFromForm = formData.get("name");
+    const urgency = formData.get("urgency"); // Normal / Urgent
+    const visibility = formData.get("visibility"); // Name / Anonymous
 
-    // Decide what name to show in the feed
-    let displayName = "CCI member";
-    if (visibility === "Anonymous") {
-      displayName = "Anonymous";
-    } else if (nameFromForm && nameFromForm.trim().length > 0) {
-      displayName = nameFromForm.trim();
-    }
+    // NOTE (Production):
+    // We do NOT use "name" from the form to identify the user.
+    // Identity comes from the signed-in account + profile, and visibility controls how it’s shown.
+    // Keeping the input in the UI for now is fine, but we ignore it when saving.
+    // const nameFromForm = formData.get("name");
 
-    // Create a new help request object in the same shape as the feed uses
-    const newRequest = {
-      id: Date.now(), // simple unique id for demo
+    // Payload for Phase 2 DB endpoint: POST /api/requests
+    const payload = {
+      category: type,
       title,
-      type,
-      name: displayName,
       description,
-      badges: [], // no credibility badges yet in this demo
       urgent: urgency === "Urgent",
-	createdByMe: true, // mark this as created by the current user (this browser)
+      visibility: visibility === "Anonymous" ? "Anonymous" : "Name",
     };
 
-    // Save to localStorage list
-    if (typeof window !== "undefined") {
-      try {
-        const existing = window.localStorage.getItem("cci-help-requests");
-        let list = [];
-        if (existing) {
-          const parsed = JSON.parse(existing);
-          if (Array.isArray(parsed)) {
-            list = parsed;
-          }
-        }
-        // put newest at the top
-        list.unshift(newRequest);
-        window.localStorage.setItem("cci-help-requests", JSON.stringify(list));
-      } catch (err) {
-        console.error("Error saving SOS to localStorage:", err);
-      }
-    }
+    try {
+      const res = await fetch("/api/requests", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      });
 
-    setTimeout(() => {
+      const data = await res.json().catch(() => ({}));
+
+      if (!res.ok) {
+        alert(data.error || "Failed to submit SOS");
+        setIsSubmitting(false);
+        return;
+      }
+
       alert(
-        "Your SOS has been submitted (demo). In the full app, this will notify helpers and admins."
+        "Your SOS has been submitted. Admins will oversee connections and offers to help."
       );
-      setIsSubmitting(false);
+
       window.location.href = "/";
-    }, 400);
+    } catch (err) {
+      console.error("Error submitting SOS:", err);
+      alert("Network error. Please try again.");
+      setIsSubmitting(false);
+    }
   }
 
   return (
@@ -72,9 +66,7 @@ export default function PostSOSPage() {
       {/* Top Bar */}
       <header className="w-full border-b bg-white">
         <div className="mx-auto max-w-3xl flex items-center justify-between px-4 py-3">
-          <div className="font-semibold text-lg">
-            CCI Care Network
-          </div>
+          <div className="font-semibold text-lg">CCI Care Network</div>
           <nav className="flex gap-4 text-sm">
             <Link href="/" className="text-slate-600 hover:underline">
               Feed
@@ -86,22 +78,20 @@ export default function PostSOSPage() {
 
       {/* Form */}
       <main className="mx-auto max-w-3xl px-4 py-6">
-        <Link
-          href="/"
-          className="text-sm text-slate-600 hover:underline"
-        >
+        <Link href="/" className="text-sm text-slate-600 hover:underline">
           ← Back to Help Requests
         </Link>
 
-        <h1 className="mt-3 text-2xl font-semibold">
-          Post an SOS
-        </h1>
+        <h1 className="mt-3 text-2xl font-semibold">Post an SOS</h1>
         <p className="mt-1 text-sm text-slate-600">
-          Share what kind of help you need. This will be visible only inside
-          the CCI family and, in the future, reviewed by admins/pastors.
+          Share what kind of help you need. This will be visible only inside the
+          CCI family and overseen by admins/pastors.
         </p>
 
-        <form onSubmit={handleSubmit} className="mt-6 space-y-4 rounded-lg border bg-white p-4 shadow-sm">
+        <form
+          onSubmit={handleSubmit}
+          className="mt-6 space-y-4 rounded-lg border bg-white p-4 shadow-sm"
+        >
           {/* Type */}
           <div>
             <label className="block text-sm font-medium text-slate-700 mb-1">
@@ -150,7 +140,7 @@ export default function PostSOSPage() {
             />
           </div>
 
-          {/* Optional name */}
+          {/* Optional name (kept for now, ignored in production save) */}
           <div>
             <label className="block text-sm font-medium text-slate-700 mb-1">
               Your name (optional for this demo)
@@ -162,7 +152,8 @@ export default function PostSOSPage() {
               className="w-full rounded-md border px-2 py-1.5 text-sm"
             />
             <p className="mt-1 text-xs text-slate-500">
-              If you leave this empty and choose Anonymous below, your request will show as “Anonymous” on the feed.
+              In production, your identity comes from your signed-in account.
+              Visibility below controls whether your name is shown or hidden.
             </p>
           </div>
 
@@ -173,7 +164,12 @@ export default function PostSOSPage() {
             </span>
             <div className="flex gap-4 text-sm">
               <label className="flex items-center gap-1">
-                <input type="radio" name="urgency" value="Normal" defaultChecked />
+                <input
+                  type="radio"
+                  name="urgency"
+                  value="Normal"
+                  defaultChecked
+                />
                 <span>Normal</span>
               </label>
               <label className="flex items-center gap-1">
@@ -199,12 +195,11 @@ export default function PostSOSPage() {
                 <span>Show my name to helpers</span>
               </label>
               <label className="flex items-center gap-2">
-                <input
-                  type="radio"
-                  name="visibility"
-                  value="Anonymous"
-                />
-                <span>Show as “Anonymous” on the feed (pastors/admins can still see who I am in the full app)</span>
+                <input type="radio" name="visibility" value="Anonymous" />
+                <span>
+                  Show as “Anonymous” on the feed (admins can still see who I
+                  am)
+                </span>
               </label>
             </div>
           </div>

@@ -35,6 +35,11 @@ model User {
 
   accounts      Account[]
   sessions      Session[]
+  helpRequests HelpRequest[]
+  helpOffers   HelpOffer[]
+
+  reviewedOffers HelpOffer[] @relation("OfferReviewedBy")
+
 }
 
 
@@ -59,6 +64,54 @@ model Profile {
   updatedAt          DateTime @updatedAt
 
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+enum RequestStatus {
+  OPEN
+  ARCHIVED
+}
+
+enum OfferStatus {
+  PENDING
+  APPROVED
+  REJECTED
+}
+
+model HelpRequest {
+  id          String        @id @default(cuid())
+  createdById String
+  createdBy   User          @relation(fields: [createdById], references: [id], onDelete: Cascade)
+
+  category    String        // Job / Financial / Spiritual / Community / Other
+  title       String
+  description String
+  urgent      Boolean       @default(false)
+
+  visibility  String        @default("Name") // "Name" or "Anonymous"
+  status      RequestStatus @default(OPEN)
+
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+
+  offers      HelpOffer[]
+}
+
+model HelpOffer {
+  id           String      @id @default(cuid())
+  requestId    String
+  request      HelpRequest @relation(fields: [requestId], references: [id], onDelete: Cascade)
+
+  offeredById  String
+  offeredBy    User        @relation(fields: [offeredById], references: [id], onDelete: Cascade)
+
+  message      String?
+  status       OfferStatus @default(PENDING)
+
+  reviewedById String?
+  reviewedBy   User?       @relation("OfferReviewedBy", fields: [reviewedById], references: [id])
+
+  createdAt    DateTime    @default(now())
+  reviewedAt   DateTime?
 }
 
 /**
